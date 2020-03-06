@@ -2,40 +2,60 @@
 
 # Cuneiform Error Correction Coding
 
+> Wall, wall! ... wall, ... wall!
+> - *Potentially interesting text from a clay tablet with some words annoyingly obscured by damage*
+
 #### A character persistence problem
-One of the problems with ancient clay tablets is that characters impressed 
-into them with a reed stylus become obscured due to tablet damage.
+Clay tablets with [cuneiform](https://en.wikipedia.org/wiki/Cuneiform) writing 
+on them are some of the most persistent prose recording devices we know of.
+Tablets created around 3,000 BC still exist and can still be read. 
 
-To enhance tablet text resilience, methods known as *error correction coding*
-can be employed. These add redundancy to the tablet content which then, with 
-simple algorithms, can be used to fill in a certain amount of missing 
-characters.
+There are limits though: characters pressed into tablets with a reed stylus 
+become obscured due to tablet damage over time.
 
-Tablets made in this way would better preserve information than those from
-Ancient Sumeria have - a mere ~5,000 years to date.
+> The back [of the extremely important tablet about an ark] is damaged in the 
+> middle of most lines, with the result that not everything there can be read 
+> now... 
+> - Finkel [1], p106 
+
+#### Potential enhancements
+To somewhat cater for this when making new tablets, several different methods 
+could be employed, such as making more robust tablets, duplicate copies and so 
+on. All methods have disadvantages (cost, effort etc.) but here we consider 
+one which, if employed, only increases effort a bit^ which is the use of *error 
+correction coding*.
+
+*^ as yet un-quantified*
 
 #### Error correction codes 
-Error correction coding is used for modern media that can suffer physical 
+To enhance text resilience of text or signals within a body of them, *error 
+correction coding* can be employed. These are methods that add redundant content 
+which then, with simple algorithms, can be used to fill in a certain amount of 
+missing characters/symbols.
+
+Error correction coding is used by modern media that can suffer physical 
 damage, such as compact disks. It's also used for transmitted messages in 
-cases where retransmission of broken messages is unfeasible for some reason,
-for example very long message travel time, as is the case with interplanetary 
-probe missions.
+cases where retransmission of broken messages is unfeasible, for example very 
+long message travel time, as is the case when radio stations communicate with 
+interplanetary space probes.
  
-Error correction codes are more efficient than simply making two copies: modern
-codes require less than 25% more characters than the original message. Simple 
-scheme, such as the one here, require 50% more. Also, the correction code is
-*within* the message, as opposed to being something independent which must then
-be kept in association with the original for message recovery.
+Error correction codes are more efficient than simply making two copies of a 
+message: modern codes require less than 25% more characters than the original 
+message. Simple scheme, such as the one here, require 50% more. Also, the 
+correction code is *within* the message, as opposed to being part of a pair 
+which must then be kept associated for error correction usability. Keeping 
+pairs of things associated over time is essentially impossible, as any sock 
+owner knows.
 
 
 ## Demonstration
 
-This demonstration encodes limited English into cuneiform and caters for a certain 
-level of character loss: no more than 1 in 3 characters and no more than 2 in a row.
+This demonstration encodes a limited writing of English into cuneiform and caters 
+for a certain level of character loss: no more than 1 in each set of 3 characters.
 
 The [main.py](main.py) file is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) 
 software script which takes, as input, limited English prose (only letters,
-',' & '.') and firstly produces error correction-encoded cuneiform, optionally with
+',' & '.') and produces error correction-encoded cuneiform, optionally with
 a number of characters obscured to test message recovery, formatted to a fixed character 
 with to allow for good tablet calligraphy on rectangular tablets.
 
@@ -51,16 +71,115 @@ It does this in 4 main steps:
 2. **Transliteration**
     - English upper case letters, both original text and error correction characters,
     are transliterated into simple cuneiform characters
-3. **Random obsuration**
+3. **Random obscuring**
     - A random number of characters - no more than 1/3 of the input text, no more than
     one in any original pair + correction character triplet - are obscured, that is
     the cuneiform characters are replaced with '-' indicating a lost character
 4. **Tablet printing**
-    - The resultant cuneiform characters are printed in lines with *n* characters per 
-    line where the user specifies *n*.
+    - The resultant cuneiform characters are printed in lines with `n` characters per 
+    line where the user specifies `n`.
     - The final line is centre space-filled with blanks (as per cuneiform norms) if 
     the message doesn't neatly divide into *n* characters  
     
+An additional, optional, step is:
+
+* **Textual reconstruction**
+    - the obscured cuneiform can be fed back into a stand-alone function which will
+    'plug' any missing characters
+    - every 3rd character - the redundant additions - are also removed
+    - conversion back to English capitals can be selected
+    - English punctuation and spaces can not be re-added as their removal results 
+    in their placement information being lost for good
+    
+These steps are detailed in [Methods](#methods) below.
+
+
+## Example
+The following text is input to the Python script:
+
+```
+Irving had a little lamb,
+its fleece was black as mud,
+And everywhere Irving went,
+the lamb left a little thud.
+```
+
+After **Encoding** we have:
+
+```
+IRZVICNGTHAHDADLITTTLLEPLALMBNITA
+SFXLEPECGEW_ASSBLMACCKAKSMDUDXANN
+DEHVEZRYOWHCERVEIMRVLINVGWBENRTTL
+HELLALMBNLEPFTYALLITATLDETXHUAD_C
+```
+(linebreaks added for readability)
+
+Note you can just make out the text of he original if you ignore every 3rd character 
+and add in punctuation and spaces.
+
+After **Transliteration** we have:
+
+```
+𒉽𒃵𒀽𒍞𒉽𒆳𒑉𒁹𒁹𒁹𒁹𒑊𒀹𒑊𒈦𒀹𒈦𒈫𒉽𒁹𒁹𒁹𒈫𒈫𒀸𒐀𒈫𒀹𒈫𒑋
+𒋡𒑉𒉽𒁹𒀹𒁇𒋰𒄑𒈫𒀸𒐀𒀸𒆳𒁹𒁹𒁹𒀸𒑈𒃰𒀹𒁇𒁇𒋡𒈫𒑋𒀹𒆳
+𒆳𒐺𒀹𒐺𒁇𒑋𒈦𒐁𒈦𒄑𒀹𒑉𒑉𒈦𒀸𒑊𒍞𒀸𒀽𒃵𒐉𒇹𒑈𒑊
+𒆳𒀸𒃵𒍞𒀸𒉽𒑋𒃵𒍞𒈫𒉽𒑉𒍞𒁹𒁹𒁹𒑈𒋡𒀸𒑉𒃵𒁹𒁹𒈫𒑊𒀸𒈫𒈫𒀹
+𒈫𒑋𒋡𒑉𒈫𒀸𒐀𒋰𒁹𒐉𒀹𒈫𒈫𒉽𒁹𒀹𒁹𒈫𒈦𒀸𒁹𒄑𒑊𒐁𒀹𒈦𒃰𒆳
+```
+(linebreaks added for readability)
+
+Using the simple lookup function at [main.py#L38](main.py#L38) you can easily recreate
+the encoded English capitals from this cuneiform character set.
+
+After **Random obscuring** we have:
+
+```
+𒉽𒃵𒀽𒍞𒉽-𒑉𒁹-𒁹𒁹𒑊-𒑊𒈦𒀹-𒈫𒉽𒁹𒁹-𒈫𒈫𒀸𒐀𒈫𒀹𒈫𒑋
+𒋡𒑉-𒁹𒀹--𒄑𒈫𒀸𒐀𒀸𒆳𒁹𒁹𒁹-𒑈𒃰𒀹𒁇-𒋡𒈫𒑋-𒆳𒆳-
+𒀹𒐺𒁇𒑋𒈦𒐁𒈦𒄑𒀹𒑉-𒈦𒀸-𒍞𒀸-𒃵𒐉𒇹𒑈𒑊𒆳-
+𒃵-𒀸𒉽𒑋-𒍞-𒉽𒑉𒍞𒁹𒁹-𒑈𒋡𒀸𒑉𒃵-𒁹𒈫𒑊𒀸𒈫𒈫-𒈫𒑋
+𒋡𒑉𒈫𒀸𒐀𒋰𒁹𒐉-𒈫𒈫𒉽-𒀹𒁹𒈫-𒀸𒁹𒄑-𒐁𒀹𒈦𒃰𒆳
+```
+(linebreaks added for readability)
+
+Notice that a quasi random 26 of the total 132 cuneiform characters/symbols have been 
+replaced with a hyphen, `-`.
+
+The replaced characters are entirely re-computable using the function `plug()` at 
+[main.py#L73](main.py#L73).
+
+After **Tablet printing** we have:
+
+```
+𒉽𒃵𒀽𒍞𒉽-𒑉𒁹-𒁹
+𒁹𒑊-𒑊𒈦𒀹-𒈫𒉽𒁹
+𒁹-𒈫𒈫𒀸𒐀𒈫𒀹𒈫𒑋
+𒋡𒑉-𒁹𒀹--𒄑𒈫𒀸
+𒐀𒀸𒆳𒁹𒁹𒁹-𒑈𒃰𒀹
+𒁇-𒋡𒈫𒑋-𒆳𒆳-𒀹
+𒐺𒁇𒑋𒈦𒐁𒈦𒄑𒀹𒑉-
+𒈦𒀸-𒍞𒀸-𒃵𒐉𒇹𒑈
+𒑊𒆳-𒃵-𒀸𒉽𒑋-𒍞
+-𒉽𒑉𒍞𒁹𒁹-𒑈𒋡𒀸
+𒑉𒃵-𒁹𒈫𒑊𒀸𒈫𒈫-
+𒈫𒑋𒋡𒑉𒈫𒀸𒐀𒋰𒁹𒐉
+-𒈫𒈫𒉽-𒀹𒁹𒈫-𒀸
+𒁹𒄑-𒐁. . 𒀹𒈦𒃰𒆳
+```
+
+Here we have lin breaks added after each 10 symbols - could have been any number. Note
+also that the last line is margin-justified (spaces added to the middle).
+
+![](images/tablet.jpg)
+**Figure 1**: An inscription of the first 8 lines of symbols from this example onto a 
+small clay tablet. Note that the obscured characters are deliberately obscured in the 
+clay.
+
+
+## Methods
+The full source code for the 4 steps listed above is contained within the file 
+[main.py](main.py), however here is an english description also.
+
 
 ### Error correction calculation
 This code uses a very simple [finite field arithmetic](https://en.wikipedia.org/wiki/Finite_field_arithmetic)
@@ -91,27 +210,41 @@ Solving this is:
 x = 27 + 10 - 19
   = 37 - 19
   = 18
-  = S
+  = 'S'
 ```
 
-### Transiteration
+### Transliteration
+The characters A - z + '_' are transliterated to simple cuneiform symbols with the
+English characters [commonly held to be the most frequent](https://en.wikipedia.org/wiki/Letter_frequency) 
+given the simplest symbols, for example:
+
+```
+E   𒀸
+T   𒁹
+A   𒀹
+...
+Q   𒆜
+Z   𒀽
+_   𒃰
+```
+See the full lookup table at [main.py#L38](main.py#L38).
  
 
+### Random obscuring
+A random number of characters up to a maximum of 1/3 of the total character length of the text
+is selected to be obscured.
+
+A maximum of 1 in every 3 characters, counted in sets of three from the start, are obscured.
+
+This ensures the correction limit of the error correction code isn't exceeded.
 
 
-```
-𒉽𒃵𒀽𒍞𒉽-𒑉𒁹-𒁹
-𒁹𒑊-𒑊𒈦𒀹-𒈫𒉽𒁹
-𒁹-𒈫𒈫𒀸𒐀𒈫𒀹𒈫𒑋
-𒋡𒑉-𒁹𒀹--𒄑𒈫𒀸
-𒐀𒀸𒆳𒁹𒁹𒁹-𒑈𒃰𒀹
-𒁇-𒋡𒈫𒑋-𒆳𒆳-𒀹
-𒐺𒁇𒑋𒈦𒐁𒈦𒄑𒀹𒑉-
-𒈦𒀸-𒍞𒀸-𒃵𒐉𒇹𒑈
-𒑊𒆳-𒃵-𒀸𒉽𒑋-𒍞
--𒉽𒑉𒍞𒁹𒁹-𒑈𒋡𒀸
-𒑉𒃵-𒁹𒈫𒑊𒀸𒈫𒈫-
-𒈫𒑋𒋡𒑉𒈫𒀸𒐀𒋰𒁹𒐉
--𒈫𒈫𒉽-𒀹𒁹𒈫-𒀸
-𒁹𒄑-𒐁. . 𒀹𒈦𒃰𒆳
-```
+### Tablet printing
+The obscured cuneiform text is then printed in sets of `n` with the default `n` being 10.
+
+The remainder of `text length` by `n` is then centre-padded to 10 to fill in the last line.
+
+
+## References
+
+[1] Finkel, Irving. *The Ark Before Noah*, Hodder & Stoughton, London (2014). ISBN 978-1-444-75708-8

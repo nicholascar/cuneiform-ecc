@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import re
 import math
 import sys
@@ -106,30 +106,6 @@ def transliterate(txt):
     return "".join([CUNE.get(x) for x in txt])
 
 
-def triplet_print(txt):
-    s2 = ""
-    for x in range(0, len(txt) -1, 3):
-        s2 += txt[x] + txt[x + 1] + txt[x + 2] + ","
-    print(s2.strip(","))
-
-
-def tablet_print(txt, width=10):
-    tab = ""
-    for x in range(0, len(txt), width):
-        tab += txt[x: x + width] + "\n"
-
-    last_line = txt[len(txt) - (len(txt) % width): len(txt)]
-    ll_split = math.ceil(len(last_line) / 2)
-
-    # make the last line the same length as 'width
-    calig_last_line = (
-        last_line[:ll_split] + ". " * (width - len(last_line)) + last_line[ll_split:]
-    )
-
-    # replace last line
-    print((tab.replace(last_line, "").strip() + "\n" + calig_last_line).strip())
-
-
 def random_obscure(txt):
     num_triplets = math.floor(len(txt) / 3)
     num_obsurations = random.randint(0, num_triplets)
@@ -154,23 +130,48 @@ def random_obscure(txt):
     return "".join(lst)
 
 
+def triplet_print(txt):
+    s2 = ""
+    for x in range(0, len(txt) -1, 3):
+        s2 += txt[x] + txt[x + 1] + txt[x + 2] + ","
+    print(s2.strip(","))
+
+
+def tablet_print(txt, width=10):
+    tab = ""
+    for x in range(0, len(txt), width):
+        tab += txt[x: x + width] + "\n"
+
+    last_line = txt[len(txt) - (len(txt) % width): len(txt)]
+    ll_split = math.ceil(len(last_line) / 2)
+
+    # make the last line the same length as 'width
+    calig_last_line = (
+        last_line[:ll_split] + ". " * (width - len(last_line)) + last_line[ll_split:]
+    )
+
+    # replace last line
+    print((tab.replace(last_line, "").strip() + "\n" + calig_last_line).strip())
+
+
 if __name__ == "__main__":
+
+    # default text, replaced if command line arg set
+    t = """
+        Irving had a little lamb,
+        its fleece was black as mud,
+        And everywhere Irving went,
+        the lamb left a little thud.
+    """
     if len(sys.argv) > 1:
         if sys.argv[1]:
             t = sys.argv[1]
-    else:
-        t = """
-            Irving had a little lamb,
-            its fleece was black as mud,
-            And everywhere Irving went,
-            the lamb left a little thud.
-        """
 
+    # default symbol line length
+    w = 10
     if len(sys.argv) > 2:
         if sys.argv[2]:
             w = int(sys.argv[2])
-    else:
-        w = 10
 
     enc = encode_eng(t)
     c = transliterate(enc)
