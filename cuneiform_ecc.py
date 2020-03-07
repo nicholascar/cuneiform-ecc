@@ -151,7 +151,7 @@ def tablet_print(txt, width=10):
     )
 
     if re.match(r"^[\.\s]+$", calig_last_line):
-        calig_last_line = ''
+        calig_last_line = ""
 
     # replace last line
     print((tab.replace(last_line, "").strip() + "\n" + calig_last_line).strip())
@@ -205,49 +205,54 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'text',
+        "text",
         type=str,
-        help='The input limited English text to encode',
+        help="The input limited English text to encode",
         default="""
                     Irving had a little lamb,
                     its fleece was black as mud,
                     And everywhere Irving went,
                     the lamb left a little thud.
-                """
+                """,
     )
     parser.add_argument(
-        '-w', '--width',
+        "-w",
+        "--width",
         type=int,
-        help='The input limited English text to encode',
-        default=10
+        help="The input limited English text to encode",
+        default=10,
     )
 
     parser.add_argument(
-        '-o', '--no-obscuring',
-        help='Prevents random character obscuring',
-        action='store_true',
-        dest='o'
+        "-o",
+        "--no-obscuring",
+        help="Prevents random character obscuring",
+        action="store_true",
+        dest="o",
     )
 
     parser.add_argument(
-        '-t', '--triplet-printing',
-        help='Enables triplet printing',
-        action='store_true',
-        dest='t'
+        "-t",
+        "--triplet-printing",
+        help="Enables triplet printing",
+        action="store_true",
+        dest="t",
     )
 
     parser.add_argument(
-        '-p', '--no-printing',
-        help='Prevents tablet printing',
-        action='store_true',
-        dest='p'
+        "-p",
+        "--no-printing",
+        help="Prevents tablet printing",
+        action="store_true",
+        dest="p",
     )
 
     parser.add_argument(
-        '-r', '--reconstruction-printing',
-        help='Prints reconstructed text',
-        action='store_true',
-        dest='r'
+        "-r",
+        "--reconstruction-printing",
+        help="Prints reconstructed text",
+        action="store_true",
+        dest="r",
     )
 
     args = parser.parse_args()
