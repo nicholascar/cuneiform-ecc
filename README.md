@@ -170,7 +170,7 @@ After **Tablet printing** we have:
 Here we have lin breaks added after each 10 symbols - could have been any number. Note
 also that the last line is margin-justified (spaces added to the middle).
 
-![](images/tablet.jpg)
+![](images/tablet.jpg)  
 **Figure 1**: An inscription of the first 8 lines of symbols from this example onto a 
 small clay tablet. Note that the obscured characters are deliberately obscured in the 
 clay.
@@ -322,7 +322,7 @@ triplet are reconstructed
 
 ## References
 
-[1] Finkel, Irving. *The Ark Before Noah*, Hodder & Stoughton, London (2014). ISBN 978-1-444-75708-8
+[1] Finkel, Irving. *The Ark Before Noah*, Hodder & Stoughton, London (2014). ISBN 978-1-444-75708-8  
 [2] Wikipedia. *Error correction code*, Online encyclopedia article (2020). https://en.wikipedia.org/wiki/Error_correction_code, accessed 2020-03-04
 
 
