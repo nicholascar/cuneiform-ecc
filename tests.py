@@ -1,4 +1,13 @@
-from main import *
+from cuneiform_ecc import *
+
+
+def test_encode_eng():
+    s = "Open the door and enter the room but expect to be stifled by the sights and sound."
+
+    expected = "OPCENRTH_EDHOOBRARNDQENRTEXRTJHELROEOM_BUVTEXXPLECGTTLOBPESWTIAFLQEDHBYZTH_ESWIGOHT_SASNDQSOFUNGD_C"
+    actual = encode_eng(s)
+
+    assert actual == expected, actual + " != " + expected
 
 
 def test_plug():
@@ -10,15 +19,6 @@ def test_plug():
 
     x = plug("S", "R", None)
     assert x == "I", "plug(S, R None) != I"
-
-
-def test_encode_eng():
-    s = "Open the door and enter the room but expect to be stifled by the sights and sound."
-
-    expected = "OPCENRTH_EDHOOBRARNDQENRTEXRTJHELROEOM_BUVTEXXPLECGTTLOBPESWTIAFLQEDHBYZTH_ESWIGOHT_SASNDQSOFUNGD_C"
-    actual = encode_eng(s)
-
-    assert actual == expected, actual + " != " + expected
 
 
 def text_reconstruct():

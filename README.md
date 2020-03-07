@@ -320,6 +320,14 @@ triplet are reconstructed
 * every 3rd English capital - the ECC addition - is removed
 
 
+## Tests
+Code tests are contained in [tests.py](tests.py). These can be run to test encoding, the `plug()` 
+function and also to test full program round-tripping (encoding, obscuring, transliteration,
+then un-transliteration and un-obscuring).
+
+Test can be run on the Python command line (`~$ python3 tests.py`) or with [pytest](https://docs.pytest.org/en/latest/).
+
+
 ## References
 
 [1] Finkel, Irving. *The Ark Before Noah*, Hodder & Stoughton, London (2014). ISBN 978-1-444-75708-8  
