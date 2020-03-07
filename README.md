@@ -29,9 +29,9 @@ correction coding*.
 
 #### Error correction codes 
 To enhance text resilience of text or signals within a body of them, *error 
-correction coding* can be employed. These are methods that add redundant content 
-which then, with simple algorithms, can be used to fill in a certain amount of 
-missing characters/symbols.
+correction coding* [2] can be employed. These are methods that add redundant 
+content which then, with simple algorithms, can be used to fill in a certain 
+amount of missing characters/symbols.
 
 Error correction coding is used by modern media that can suffer physical 
 damage, such as compact disks. It's also used for transmitted messages in 
@@ -53,7 +53,7 @@ owner knows.
 This demonstration encodes a limited writing of English into cuneiform and caters 
 for a certain level of character loss: no more than 1 in each set of 3 characters.
 
-The [main.py](main.py) file is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) 
+The [cuneiform_ecc.py](cuneiform_ecc.py) file is a [Python](https://en.wikipedia.org/wiki/Python_(programming_language)) 
 software script which takes, as input, limited English prose (only letters,
 ',' & '.') and produces error correction-encoded cuneiform, optionally with
 a number of characters obscured to test message recovery, formatted to a fixed character 
@@ -128,7 +128,7 @@ After **Transliteration** we have:
 ```
 (linebreaks added for readability)
 
-Using the simple lookup function at [main.py#L38](main.py#L38) you can easily recreate
+Using the simple lookup function at [cuneiform_ecc.py#L38](cuneiform_ecc.py#L38) you can easily recreate
 the encoded English capitals from this cuneiform character set.
 
 After **Random obscuring** we have:
@@ -146,7 +146,7 @@ Notice that a quasi random 26 of the total 132 cuneiform characters/symbols have
 replaced with a hyphen, `-`.
 
 The replaced characters are entirely re-computable using the function `plug()` at 
-[main.py#L73](main.py#L73).
+[cuneiform_ecc.py#L73](cuneiform_ecc.py#L73).
 
 After **Tablet printing** we have:
 
@@ -175,13 +175,76 @@ also that the last line is margin-justified (spaces added to the middle).
 small clay tablet. Note that the obscured characters are deliberately obscured in the 
 clay.
 
+### Further use
+This code can be used as a Python command line program as follows:
+
+```
+~$ python3 cuneiform_ecc.py {TEXT} [-h] [-w WIDTH] [-o] [-t] [-p] [-r]
+```
+
+Positional arguments:
+  * TEXT
+    * The input limited English text to encode
+
+Optional arguments:
+  * -h, --help
+    * show this help message and exit
+  * -w WIDTH, --width WIDTH
+    * The input limited English text to encode
+  * -o, --no-obscuring
+    * Prevents random character obscuring
+  * -t, --triplet-printing
+    * Enables triplet printing
+  * -p, --no-printing
+    * Prevents tablet printing
+  * -r, --reconstruction-printing
+    * Prints reconstructed text
+
+Examples:
+
+```
+~$ python3 cuneiform_ecc.py "I read my tablet, ate my lunch, prepared my tablet, wrote it"
+```
+This encodes the given text, obscures it and tablet prints it to:
+
+```
+-𒃵𒀽𒀸𒀹-𒈦𒑋--
+𒁹𒆜𒀹𒋡-𒈫𒀸𒐀𒁹𒀹
+𒁹𒁹𒀸𒄑𒑋𒐉𒑖𒈫𒐁𒀸
+𒑉𒆳𒐀𒑊𒐀-𒃵𒀸𒍞𒐀
+-𒐀-𒀸𒍞𒈦𒑋𒐀-𒁹
+𒆜𒀹𒋡--𒀸𒐀-𒑈𒇹
+𒃵𒇹𒀸𒁹𒀸. 𒄑𒉽𒁹-
+```
+
+```
+~$ python3 cuneiform_ecc.py "I read my tablet" -o
+```
+This encodes the given text but does not obscures it and tablet prints it to:
+
+```
+𒉽𒃵𒀽𒀸𒀹𒀸𒈦𒑋𒐀𒐉
+𒁹𒆜𒀹𒋡𒋡𒈫𒀸𒐀𒁹𒃰
+𒁇. . . . . . . . .
+```
+
+```
+~$ python3 cuneiform_ecc.py "I read my tablet" -p -r
+```
+This encoded the given text, obscures it but does not print it. It then reconstructs it and 
+prints the reconstructed text:
+
+```
+IREADMYTABLET_
+```
+
 
 ## Methods
 The full source code for the 4 steps listed above is contained within the file 
-[main.py](main.py), however here is an english description also.
+[cuneiform_ecc.py](cuneiform_ecc.py), however here is an english description also.
 
 
-### Error correction calculation
+### 1. Error correction calculation
 This code uses a very simple [finite field arithmetic](https://en.wikipedia.org/wiki/Finite_field_arithmetic)
 (Galois field) to calculate a redundant correction character for every character 
 pair. 
@@ -213,7 +276,7 @@ x = 27 + 10 - 19
   = 'S'
 ```
 
-### Transliteration
+### 2. Transliteration
 The characters A - z + '_' are transliterated to simple cuneiform symbols with the
 English characters [commonly held to be the most frequent](https://en.wikipedia.org/wiki/Letter_frequency) 
 given the simplest symbols, for example:
@@ -227,10 +290,13 @@ Q   𒆜
 Z   𒀽
 _   𒃰
 ```
-See the full lookup table at [main.py#L38](main.py#L38).
+See the full lookup table at [cuneiform_ecc.py#L38](cuneiform_ecc.py#L38).
+
+Complex or compound cuneiform symbols, such as `𒋪` are not used in this lookup to keep 
+hand-writing of symbols simple.
  
 
-### Random obscuring
+### 3. Random obscuring
 A random number of characters up to a maximum of 1/3 of the total character length of the text
 is selected to be obscured.
 
@@ -239,12 +305,45 @@ A maximum of 1 in every 3 characters, counted in sets of three from the start, a
 This ensures the correction limit of the error correction code isn't exceeded.
 
 
-### Tablet printing
+### 4. Tablet printing
 The obscured cuneiform text is then printed in sets of `n` with the default `n` being 10.
 
 The remainder of `text length` by `n` is then centre-padded to 10 to fill in the last line.
 
 
+### 5. Textual reconstruction
+Reconstruction of the text from obscured cuneiform simply reverses the original processes:
+
+* reverse transliteration occurs - cuneiform symbols back to English capitals
+* using the `plug()` (see[cuneiform_ecc.py#L73](cuneiform_ecc.py#L73)), any obscured characters in a symbol
+triplet are reconstructed
+* every 3rd English capital - the ECC addition - is removed
+
+
 ## References
 
 [1] Finkel, Irving. *The Ark Before Noah*, Hodder & Stoughton, London (2014). ISBN 978-1-444-75708-8
+[2] Wikipedia. *Error correction code*, Online encyclopedia article (2020). https://en.wikipedia.org/wiki/Error_correction_code, accessed 2020-03-04
+
+
+## Licenses
+This code and all other material in this repository is released under the [Creative Common Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/) 
+license which means you are free to:
+
+* **Share** — copy and redistribute the material in any medium or format
+* **Adapt** — remix, transform, and build upon the material for any purpose, even commercially. 
+
+As long as:
+
+* **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+
+* **No additional restrictions** — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+
+
+## Contacts
+*author*:  
+**Nicholas J. Car**  
+<https://orcid.org/0000-0002-8742-7730>  
+<nick@kurrawong.net>  
+
+Contact Nick for any matters.

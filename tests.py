@@ -19,3 +19,23 @@ def test_encode_eng():
     actual = encode_eng(s)
 
     assert actual == expected, actual + " != " + expected
+
+
+def text_reconstruct():
+    txt = """
+        When kingship was lowered from heaven
+        The kingship was in Eridu.
+        In Eridu Alulim became king
+        and reigned for many years
+        """
+
+    expected = "WHENKINGSHIPWASLOWEREDFROMHEAVENTHEKINGSHIPWASINERIDUINERIDUALULIMBECAMEKINGANDREIGNEDFORMANYYEARS"
+    actual = textual_reconstruction(random_obscure(transliterate(encode_eng(txt))))
+
+    assert actual == expected, actual + " != " + expected
+
+
+if __name__ == "__main__":
+    test_plug()
+    test_encode_eng()
+    text_reconstruct()
